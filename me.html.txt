@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Our Valentine 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: "Quicksand", sans-serif;
+  background: linear-gradient(135deg, #ff1e4d, #ff5f7e, #ff9aa2);
+  color: white;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* INTRO SCREEN */
+#introScreen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ff0033, #ff5f7e);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 1.5s ease;
+}
+
+#introScreen img {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+#introScreen h1 {
+  font-size: 28px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Containers */
+.card {
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 20px;
+  max-width: 900px;
+  margin: 20px auto;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Buttons */
+button {
+  background: #ff0033;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #cc0029;
+}
+
+/* Inputs */
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+/* Gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.gallery img {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Floating Hearts */
+.heart {
+  position: fixed;
+  bottom: 0;
+  font-size: 22px;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  to { transform: translateY(-100vh); opacity: 0; }
+}
+
+/* Popup */
+#popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.popupBox {
+  background: #ff2d55;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 420px;
+  margin: 18vh auto;
+}
+
+/* Secret Screen */
+#secretScreen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ff0033, #ff758c);
+  padding: 40px;
+}
+
+#reactionImg {
+  width: 230px;
+  border-radius: 16px;
+  margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 💖 INTRO SCREEN -->
+<div id="introScreen">
+  <h1>💖 Welcome To Our Love Story</h1>
+  <img id="introImage" src="">
+  <input type="file" accept="image/*" onchange="loadIntroImage(event)">
+  <p>Upload a cute intro image 💞</p>
+  <button onclick="enterSite()">Enter Our Love 💘</button>
+</div>
+
+<h1>💖 A Valentine Page For <span id="nameDisplay">You</span></h1>
+
+<!-- Name -->
+<div class="card">
+  <h2>💑 Enter Their Name</h2>
+  <input type="text" id="nameInput" placeholder="Type their name...">
+  <button onclick="setName()">Save Name 💘</button>
+</div>
+
+<!-- Romantic Messages -->
+<div class="card">
+  <h2>🤍 Romantic Message Generator</h2>
+  <p id="autoMessage">Click to generate love 💞</p>
+  <button onclick="generateMessage()">Generate ✨</button>
+</div>
+
+<!-- Custom Message -->
+<div class="card">
+  <h2>💌 Write a Love Message</h2>
+  <textarea id="message" oninput="updateMessage()"></textarea>
+  <p id="previewText">You are my heart’s favorite person 💖</p>
+</div>
+
+<!-- Photo Dump -->
+<div class="card">
+  <h2>📸 Photo Dump With Love Captions</h2>
+  <input type="file" multiple accept="image/*" onchange="loadPhotos(event)">
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<!-- Timeline -->
+<div class="card">
+  <h2>📖 Love Story Timeline</h2>
+  <input id="timelineInput" placeholder="Add a memory...">
+  <button onclick="addTimeline()">Add 💞</button>
+  <div id="timeline"></div>
+</div>
+
+<!-- Playlist -->
+<div class="card">
+  <h2>🎵 Custom Playlist</h2>
+  <input type="file" accept="audio/*" onchange="loadMusic(event)">
+  <button onclick="toggleMusic()">Play / Pause 🎶</button>
+</div>
+
+<!-- Mini Game -->
+<div class="card">
+  <h2>🎮 Catch The Heart Mini Game</h2>
+  <button onclick="startGame()">Start Game 💘</button>
+  <p id="score">Score: 0</p>
+</div>
+
+<!-- Valentine Popup -->
+<div class="card">
+  <h2>💍 Will You Be My Valentine?</h2>
+  <button onclick="openPopup()">Ask 💖</button>
+</div>
+
+<!-- Secret Love Letter -->
+<div class="card">
+  <h2>💌 Secret Love Letter</h2>
+  <button onclick="openSecret()">Open Letter 💝</button>
+</div>
+
+<!-- Popup -->
+<div id="popup">
+  <div class="popupBox">
+    <h2>Will You Be My Valentine? 💘</h2>
+    <button onclick="sayYes()">YES 💖</button>
+    <button id="noBtn" onmouseover="moveNo()">NO 😜</button>
+  </div>
+</div>
+
+<!-- Secret Screen -->
+<div id="secretScreen">
+  <h1>💞 I Miss You</h1>
+  <p>You are my favorite dream, my safest place, and my forever 💖</p>
+  <input type="file" accept="image/*" onchange="loadReaction(event)">
+  <img id="reactionImg">
+  <br><br>
+  <button onclick="closeSecret()">Back 💌</button>
+</div>
+
+<audio id="music" loop></audio>
+
+<script>
+// INTRO IMAGE
+function loadIntroImage(event) {
+  document.getElementById("introImage").src = URL.createObjectURL(event.target.files[0]);
+}
+
+function enterSite() {
+  document.getElementById("introScreen").style.display = "none";
+}
+
+// Name
+function setName() {
+  document.getElementById("nameDisplay").innerText =
+  document.getElementById("nameInput").value || "You";
+}
+
+// Romantic Messages
+const romanticMessages = [
+"You feel like home to my heart 💖",
+"My heart chose you forever ❤️",
+"You make my soul smile 💕",
+"If love had a name, it would be yours ✨",
+"You are my favorite miracle 💞"
+];
+
+function generateMessage() {
+  document.getElementById("autoMessage").innerText =
+  romanticMessages[Math.floor(Math.random() * romanticMessages.length)];
+}
+
+// Custom Message
+function updateMessage() {
+  document.getElementById("previewText").innerText =
+  document.getElementById("message").value || "You are my heart’s favorite person 💖";
+}
+
+// Photo Dump
+function loadPhotos(event) {
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
+  Array.from(event.target.files).forEach(file => {
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(file);
+    gallery.appendChild(img);
+  });
+}
+
+// Timeline
+function addTimeline() {
+  const text = document.getElementById("timelineInput").value;
+  if (!text) return;
+  const p = document.createElement("p");
+  p.innerText = "💖 " + text;
+  document.getElementById("timeline").appendChild(p);
+  document.getElementById("timelineInput").value = "";
+}
+
+// Music
+const music = document.getElementById("music");
+function loadMusic(event) {
+  music.src = URL.createObjectURL(event.target.files[0]);
+  music.play();
+}
+function toggleMusic() {
+  music.paused ? music.play() : music.pause();
+}
+
+// Valentine Popup
+function openPopup() {
+  document.getElementById("popup").style.display = "block";
+}
+function sayYes() {
+  alert("💖 BEST ANSWER EVER 💞");
+  document.getElementById("popup").style.display = "none";
+}
+function moveNo() {
+  const btn = document.getElementById("noBtn");
+  btn.style.position = "absolute";
+  btn.style.left = Math.random() * 260 + "px";
+  btn.style.top = Math.random() * 160 + "px";
+}
+
+// Secret Screen
+function openSecret() {
+  document.getElementById("secretScreen").style.display = "block";
+}
+function closeSecret() {
+  document.getElementById("secretScreen").style.display = "none";
+}
+function loadReaction(event) {
+  document.getElementById("reactionImg").src = URL.createObjectURL(event.target.files[0]);
+}
+
+// Mini Game
+let score = 0;
+function startGame() {
+  const heart = document.createElement("div");
+  heart.innerHTML = "❤️";
+  heart.style.position = "fixed";
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.top = Math.random() * window.innerHeight + "px";
+  heart.style.fontSize = "40px";
+  heart.onclick = () => {
+    score++;
+    document.getElementById("score").innerText = "Score: " + score;
+    heart.remove();
+  };
+  document.body.appendChild(heart);
+}
+
+// Floating Hearts
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = Math.random() > 0.5 ? "❤️" : "💖";
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 450);
+</script>
+
+</body>
+</html>
