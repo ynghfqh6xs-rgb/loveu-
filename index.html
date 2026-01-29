@@ -241,21 +241,17 @@ input, textarea {
 
 <audio id="music" loop></audio>
 
-<script> // VIEWER vs EDITOR MODE
+<script> // EDITOR vs VIEWER MODE
 const urlParams = new URLSearchParams(window.location.search);
 const isEditor = urlParams.get("edit") === "true";
 
-// Hide editing tools for viewers
 window.onload = () => {
   if (!isEditor) {
-    document.querySelectorAll("input, textarea, button").forEach(el => {
-      if (!el.classList.contains("alwaysShow")) {
-        el.style.display = "none";
-      }
+    document.querySelectorAll("input, textarea").forEach(el => {
+      el.style.display = "none";
     });
   }
 };
-</script>
 // INTRO IMAGE
 function loadIntroImage(event) {
   document.getElementById("introImage").src = URL.createObjectURL(event.target.files[0]);
